@@ -12,17 +12,18 @@ from IPython.display import SVG
 from keras.utils.vis_utils import model_to_dot
 from keras.utils import plot_model
 
-happyModel = load_model('happy_model.h5')
+def test(img_path):
+    happyModel = load_model('happy_model.h5')
 
-### START CODE HERE ###
-img_path = 'images/mytest.jpg'
-### END CODE HERE ###
-img = image.load_img(img_path, target_size=(64, 64))
-#imshow(img)
-
-x = image.img_to_array(img)
-x = np.expand_dims(x, axis=0)
-x = preprocess_input(x)
-
-print(happyModel.predict(x))
+    ### START CODE HERE ###
+    #img_path = 'images/mytest.jpg'
+    ### END CODE HERE ###
+    img = image.load_img(img_path, target_size=(64, 64))
+    #imshow(img)
+    
+    x = image.img_to_array(img)
+    x = np.expand_dims(x, axis=0)
+    x = preprocess_input(x)
+    
+    return (happyModel.predict(x))
 
