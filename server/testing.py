@@ -11,6 +11,7 @@ from keras.applications.imagenet_utils import preprocess_input
 from IPython.display import SVG
 from keras.utils.vis_utils import model_to_dot
 from keras.utils import plot_model
+import sys
 
 def test(img_path):
     happyModel = load_model('happy_model.h5')
@@ -27,3 +28,6 @@ def test(img_path):
     
     return (happyModel.predict(x))
 
+program_name = sys.argv[0]
+image_path = sys.argv[1]
+test(image_path)
