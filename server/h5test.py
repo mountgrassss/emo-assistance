@@ -110,8 +110,8 @@ def copy_dataset():
     newH5fTest.close()
     
 
-def update_dataset():
-    pendingh5f = h5py.File("datasets/pending_face_test.h5", "r")
+def update_dataset(dataSetFilePath):
+    pendingh5f = h5py.File(dataSetFilePath)
     pending_set_x = pendingh5f["pending_set_x"]
     pending_set_y = pendingh5f["pending_set_y"]
     training_ratio = 0.8
@@ -126,7 +126,8 @@ def update_dataset():
     print(np.shape(Y_train_data))
     print(np.shape(Y_test_data))
     pendingh5f.close()
-        
+    
+    currentSize = 0    
 
     with h5py.File('datasets/train_happy_chunked.h5', 'a') as h5f:
         h5f["train_set_x"].resize((h5f["train_set_x"].shape[0] + X_train_data.shape[0]), axis = 0)
@@ -139,6 +140,7 @@ def update_dataset():
         dset_y = h5f["train_set_y"]
         print(np.shape(dset_x))
         print(np.shape(dset_y))
+        currentSize = np.shape(dset_x)[0]
         
     with h5py.File('datasets/test_happy_chunked.h5', 'a') as h5f:
         h5f["test_set_x"].resize((h5f["test_set_x"].shape[0] + X_test_data.shape[0]), axis = 0)
@@ -150,8 +152,10 @@ def update_dataset():
         dset_y = h5f["test_set_y"]
         print(np.shape(dset_x))
         print(np.shape(dset_y))
+        
+    return currentSize
 
-def create_dataset(dataSetFilePath):
+def create_pending_dataset(dataSetFilePath):
     h5f = h5py.File(dataSetFilePath, "w")
     
     numFile = 1
@@ -176,11 +180,12 @@ def create_dataset(dataSetFilePath):
     #print(h5f.keys() )
     h5f.close()
     
-def append_image(filename, label):
-    image_data = image_load(filename)
-    print(np.shape(image_data))
+def append_image(datasetFilePath, imageFilename, label):
+    image_data = image_load(imageFilename)
+    #print(np.shape(image_data))
     
-    with h5py.File('datasets/pending_face_test.h5', 'a') as h5f:
+    currentSize = 0
+    with h5py.File(datasetFilePath, 'a') as h5f:
         h5f["pending_set_x"].resize((h5f["pending_set_x"].shape[0] + 1), axis = 0)
         h5f["pending_set_x"][-1:] = image_data
 
@@ -191,6 +196,9 @@ def append_image(filename, label):
         dset_y = h5f["pending_set_y"]
         print(np.shape(dset_x))
         print(np.shape(dset_y))
+        currentSize = np.shape(dset_x)[0]        
+        
+    return currentSize
 
 
 #load_dataset()
@@ -203,4 +211,4 @@ for i in range(3,3+n):
     append_image(filePath, 1)
 '''
 #copy_dataset()
-update_dataset()
+#update_dataset()
